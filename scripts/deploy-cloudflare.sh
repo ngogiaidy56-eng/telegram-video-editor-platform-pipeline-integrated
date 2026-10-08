@@ -4,10 +4,6 @@ set -euo pipefail
 : "${CLOUDFLARE_API_TOKEN:?Set CLOUDFLARE_API_TOKEN}"
 : "${CLOUDFLARE_ACCOUNT_ID:?Set CLOUDFLARE_ACCOUNT_ID}"
 : "${KTOR_BACKEND_ORIGIN:?Set KTOR_BACKEND_ORIGIN}"
-: "${EDGE_SHARED_SECRET:?Set EDGE_SHARED_SECRET}"
-
-BOT_TOKEN_VALUE="${BOT_TOKEN:-${TELEGRAM_BOT_TOKEN:-}}"
-: "${BOT_TOKEN_VALUE:?Set BOT_TOKEN (or TELEGRAM_BOT_TOKEN)}"
 
 CF_WORKER_NAME="${CF_WORKER_NAME:-video-subtitle-api}"
 CF_PAGES_PROJECT="${CF_PAGES_PROJECT:-video-subtitle-tma}"
@@ -24,17 +20,7 @@ gradle :webApp:jsBrowserDistribution
 
 TMP_SECRETS="$(mktemp)"
 trap 'rm -f "$TMP_SECRETS"' EXIT
-
-node -e '
-const fs = require("fs");
-const path = process.argv[1];
-const secrets = {
-  BACKEND_ORIGIN: process.env.KTOR_BACKEND_ORIGIN,
-  BOT_TOKEN: process.env.BOT_TOKEN || process.env.TELEGRAM_BOT_TOKEN,
-  EDGE_SHARED_SECRET: process.env.EDGE_SHARED_SECRET
-};
-fs.writeFileSync(path, JSON.stringify(secrets), { mode: 0o600 });
-' "$TMP_SECRETS"
+node -e 'require("fs").writeFileSync(process.argv[1], JSON.stringify({BACKEND_ORIGIN: process.env.KTOR_BACKEND_ORIGIN}))' "$TMP_SECRETS"
 
 echo "==> Deploy Worker: $CF_WORKER_NAME"
 npx wrangler@4.148.0 deploy \

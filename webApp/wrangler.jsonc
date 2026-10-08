@@ -6,7 +6,7 @@
   "services": [
     {
       "binding": "API_WORKER",
-      "service": "video-subtitle-api"
+      "service": "telegram-video-editor-platform-pipeline-integrated"
     }
   ]
 }
