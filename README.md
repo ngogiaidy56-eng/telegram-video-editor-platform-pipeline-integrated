@@ -86,7 +86,7 @@ The edge Worker declares three required secrets in `cloudflare/worker/wrangler.j
 - `BOT_TOKEN`: Telegram Bot API token used by the Worker webhook.
 - `EDGE_SHARED_SECRET`: random shared secret used for Worker → Ktor HMAC authentication.
 
-Cloudflare validates every name in `secrets.required` during deploy, so the Worker cannot be deployed until all three exist. citeturn170264search0turn170264search3
+Cloudflare validates every name in `secrets.required` during deploy, so the Worker cannot be deployed until all three exist.
 
 Manual setup:
 
@@ -143,6 +143,8 @@ Linux/macOS:
 export CLOUDFLARE_API_TOKEN=...
 export CLOUDFLARE_ACCOUNT_ID=...
 export KTOR_BACKEND_ORIGIN=https://api.example.com
+export BOT_TOKEN=...
+export EDGE_SHARED_SECRET=...
 ./scripts/deploy-cloudflare.sh
 ```
 
