@@ -78,34 +78,19 @@ The Docker image installs FFmpeg.
 
 The deployment now uses Cloudflare's current Wrangler configuration format (`wrangler.jsonc`). Cloudflare recommends JSON/JSONC for new Worker configurations; Pages projects use `pages_build_output_dir` when configuration is managed in source control.
 
-### 1. Configure the Worker secrets
+### 1. Create the Worker secret
 
-The edge Worker declares three required secrets in `cloudflare/worker/wrangler.jsonc`:
-
-- `BACKEND_ORIGIN`: public HTTPS origin of the Ktor backend.
-- `BOT_TOKEN`: Telegram Bot API token used by the Worker webhook.
-- `EDGE_SHARED_SECRET`: random shared secret used for Worker → Ktor HMAC authentication.
-
-Cloudflare validates every name in `secrets.required` during deploy, so the Worker cannot be deployed until all three exist.
+The edge Worker requires `BACKEND_ORIGIN`. It is declared as a required secret in `cloudflare/worker/wrangler.jsonc`.
 
 Manual setup:
 
 ```bash
 cd cloudflare/worker
 npm install
-
 npx wrangler@4.148.0 secret put BACKEND_ORIGIN
-npx wrangler@4.148.0 secret put BOT_TOKEN
-npx wrangler@4.148.0 secret put EDGE_SHARED_SECRET
 ```
 
-Generate the HMAC secret locally instead of committing it:
-
-```bash
-openssl rand -hex 32
-```
-
-For automated deployment, `scripts/deploy-cloudflare.sh` and `scripts/deploy-cloudflare.ps1` now upload all three required secrets through Wrangler's `--secrets-file` flow. Cloudflare supports JSON or dotenv secret files for this purpose.
+Cloudflare documents `wrangler secret put` and required-secret validation for deployment.
 
 ### 2. Build the TMA
 
@@ -143,8 +128,6 @@ Linux/macOS:
 export CLOUDFLARE_API_TOKEN=...
 export CLOUDFLARE_ACCOUNT_ID=...
 export KTOR_BACKEND_ORIGIN=https://api.example.com
-export BOT_TOKEN=...
-export EDGE_SHARED_SECRET=...
 ./scripts/deploy-cloudflare.sh
 ```
 
