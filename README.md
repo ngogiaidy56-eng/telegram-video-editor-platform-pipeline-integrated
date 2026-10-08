@@ -105,7 +105,7 @@ Generate the HMAC secret locally instead of committing it:
 openssl rand -hex 32
 ```
 
-For automated deployment, `scripts/deploy-cloudflare.sh` and `scripts/deploy-cloudflare.ps1` now upload all three required secrets through Wrangler's `--secrets-file` flow. Cloudflare supports JSON or dotenv secret files for this purpose. citeturn170264search2turn170264search3
+For automated deployment, `scripts/deploy-cloudflare.sh` and `scripts/deploy-cloudflare.ps1` now upload all three required secrets through Wrangler's `--secrets-file` flow. Cloudflare supports JSON or dotenv secret files for this purpose.
 
 ### 2. Build the TMA
 
